@@ -1,6 +1,6 @@
 import { useSDK } from "@metamask/sdk-react";
 import { useEffect, useState } from "react";
-import Web3, { Contract } from "web3";
+import Web3 from "web3";
 import MintTokenAbi from "./MintTokenAbi.json";
 
 const App = () => {
@@ -24,7 +24,7 @@ const App = () => {
     try {
       const response = await contract.methods.balanceOf(account).call();
 
-      console.log(web3);
+      console.log(response);
     } catch (error) {
       console.error(error);
     }
