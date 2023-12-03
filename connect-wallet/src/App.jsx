@@ -7,6 +7,9 @@ const App = () => {
   const [account, setAccount] = useState("");
   const [web3, setWeb3] = useState();
   const [contract, setContract] = useState();
+  const [tokenName, setTokenName] = useState("Token");
+  const [tokenAmount, setTokenAmount] = useState(0);
+  const [tokenSymbol, setTokenSymbol] = useState("Token");
 
   const { sdk, provider } = useSDK();
 
@@ -20,11 +23,31 @@ const App = () => {
     }
   };
 
-  const getToken = async () => {
+  const getTokenAmount = async () => {
     try {
       const response = await contract.methods.balanceOf(account).call();
 
-      console.log(response);
+      setTokenAmount(web3.utils.fromWei(response, "ether"));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getTokenName = async () => {
+    try {
+      const response = await contract.methods.name().call();
+
+      setTokenName(response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getTokenSymbol = async () => {
+    try {
+      const response = await contract.methods.symbol().call();
+
+      setTokenSymbol(response);
     } catch (error) {
       console.error(error);
     }
@@ -49,7 +72,9 @@ const App = () => {
   useEffect(() => {
     if (!account) return;
 
-    getToken();
+    getTokenAmount();
+    getTokenName();
+    getTokenSymbol();
   }, [account]);
 
   return (
@@ -60,7 +85,9 @@ const App = () => {
             Hello, {account.substring(0, 7)}...
             {account.substring(account.length - 5)}
           </div>
-          <div>Token : 1000 BTC</div>
+          <div>
+            {tokenName} : {tokenAmount} {tokenSymbol}
+          </div>
         </>
       ) : (
         <button
