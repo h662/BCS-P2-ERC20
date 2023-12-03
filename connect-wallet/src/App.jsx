@@ -1,10 +1,12 @@
 import { useSDK } from "@metamask/sdk-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Web3 from "web3";
 
 const App = () => {
   const [account, setAccount] = useState("");
+  const [web3, setWeb3] = useState();
 
-  const { sdk } = useSDK();
+  const { sdk, provider } = useSDK();
 
   const onClickMetamask = async () => {
     try {
@@ -15,6 +17,14 @@ const App = () => {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    if (!provider) return;
+
+    setWeb3(new Web3(provider));
+  }, [provider]);
+
+  useEffect(() => console.log(web3), [web3]);
 
   return (
     <div className="min-h-screen flex flex-col gap-4 justify-center items-center">
